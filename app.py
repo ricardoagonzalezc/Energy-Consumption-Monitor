@@ -28,7 +28,7 @@ else:
         df = pd.read_csv(uploaded_file, parse_dates=["timestamp"])
         st.sidebar.success(f"{len(df)} rows loaded")
 
-ZONES = ["hvac", "lighting", "lobby", "it_room", "kitchen"]
+ZONES = ["hvac", "lighting", "lobby", "mechanical_room", "kitchen"]
 
 if df is not None:
 
