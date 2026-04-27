@@ -4,7 +4,7 @@ THRESHOLDS = {
     "hvac":     {"max": 32.0, "unit": "kWh"},
     "lighting": {"max": 14.0, "unit": "kWh"},
     "lobby":    {"max": 8.0,  "unit": "kWh"},
-    "it_room":  {"max": 16.0, "unit": "kWh"},
+    "mechanical_room":  {"max": 16.0, "unit": "kWh"},
     "kitchen":  {"max": 12.0, "unit": "kWh"},
 }
 

@@ -25,7 +25,7 @@ def lobby_profile(hour):
         return np.random.normal(4, 0.5)
     return np.random.normal(1.5, 0.3)
 
-def it_room_profile(hour):
+def mechanical_room_profile(hour):
     return np.random.normal(10, 0.5)
 
 def kitchen_profile(hour):
@@ -37,7 +37,7 @@ def kitchen_profile(hour):
 hvac     = np.array([hvac_profile(h)    for h in hours]).clip(min=0)
 lighting = np.array([lighting_profile(h) for h in hours]).clip(min=0)
 lobby    = np.array([lobby_profile(h)   for h in hours]).clip(min=0)
-it_room  = np.array([it_room_profile(h) for h in hours]).clip(min=0)
+mechanical_room  = np.array([mechanical_room_profile(h) for h in hours]).clip(min=0)
 kitchen  = np.array([kitchen_profile(h) for h in hours]).clip(min=0)
 
 # Inject anomalies
@@ -55,7 +55,7 @@ df = pd.DataFrame({
     "hvac":      hvac.round(2),
     "lighting":  lighting.round(2),
     "lobby":     lobby.round(2),
-    "it_room":   it_room.round(2),
+    "mechanical_room":   mechanical_room.round(2),
     "kitchen":   kitchen.round(2),
 })
 

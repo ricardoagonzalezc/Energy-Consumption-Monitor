@@ -6,7 +6,7 @@ ZONE_COLORS = {
     "hvac":     "#1f77b4",
     "lighting": "#ff7f0e",
     "lobby":    "#2ca02c",
-    "it_room":  "#d62728",
+    "mechanical_room":  "#d62728",
     "kitchen":  "#9467bd"
 }
 
@@ -57,7 +57,7 @@ def heatmap_chart(df):
     df = df.copy()
     df["hour"]    = df["timestamp"].dt.hour
     df["weekday"] = df["timestamp"].dt.day_name()
-    df["total"]   = df[["hvac", "lighting", "lobby", "it_room", "kitchen"]].sum(axis=1)
+    df["total"]   = df[["hvac", "lighting", "lobby", "mechanical_room", "kitchen"]].sum(axis=1)
 
     order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
     pivot = df.groupby(["weekday", "hour"])["total"].mean().unstack()
