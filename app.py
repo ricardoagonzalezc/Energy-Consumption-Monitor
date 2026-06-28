@@ -64,7 +64,7 @@ if df is not None:
     if selected_zones and len(df) > 0:
 
         # ── KPI Cards ─────────────────────────────────────────
-        st.subheader("📊 Key Performance Indicators")
+        st.subheader("Key Performance Indicators")
         kpis = calculate_kpis(df[["timestamp"] + selected_zones], cost_per_kwh)
 
         c1, c2, c3, c4, c5 = st.columns(5)
@@ -75,26 +75,26 @@ if df is not None:
         c5.metric("Top Consumer",      kpis['worst_zone'].replace("_", " ").title())
 
         # ── Line Chart ────────────────────────────────────────
-        st.subheader("📈 Consumption Over Time")
+        st.subheader("Consumption Over Time")
         st.plotly_chart(line_chart(df, selected_zones), use_container_width=True)
 
         # ── Stacked Bar Chart ─────────────────────────────────
-        st.subheader("📊 Daily Totals by Zone")
+        st.subheader("Daily Totals by Zone")
         st.plotly_chart(stacked_bar_chart(df, selected_zones), use_container_width=True)
 
         # ── Heatmap ───────────────────────────────────────────
-        st.subheader("🗓️ Consumption Heatmap")
+        st.subheader("Consumption Heatmap")
         st.plotly_chart(heatmap_chart(df), use_container_width=True)
 
         # ── Alert Log ─────────────────────────────────────────
-        st.subheader("🚨 Threshold Alert Log")
+        st.subheader("Threshold Alert Log")
         alerts_df = check_alerts(df[["timestamp"] + selected_zones])
 
         if len(alerts_df) > 0:
             st.error(f"{len(alerts_df)} alerts triggered across selected zones")
             st.dataframe(alerts_df, use_container_width=True)
         else:
-            st.success("✅ No threshold violations in selected range")
+            st.success("No threshold violations in selected range")
 
     else:
         st.warning("Please select at least one zone from the sidebar.")
