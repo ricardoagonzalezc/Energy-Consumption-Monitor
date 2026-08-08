@@ -10,7 +10,7 @@ from visuals.charts import line_chart, stacked_bar_chart, heatmap_chart
 
 # ── Page config ───────────────────────────────────────────────
 st.set_page_config(page_title="Energy Consumption Monitor", layout="wide")
-st.title("⚡ Energy Consumption Monitor")
+st.title("Energy Consumption Dashboard")
 st.markdown("Multi-zone building energy tracking with anomaly alerts and KPI reporting.")
 
 # ── Sidebar ───────────────────────────────────────────────────
@@ -100,7 +100,7 @@ if df is not None:
         st.warning("Please select at least one zone from the sidebar.")
 
 else:
-    st.info("👈 Select a data source in the sidebar to get started.")
+    st.info("Select a data source to get started.")
 
 
     
