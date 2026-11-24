@@ -2,7 +2,8 @@ def calculate_kpis(df, cost_per_kwh=0.15):
     """
     Calculate key energy KPIs from the dataframe.
     """
-    zones = ["hvac", "lighting", "lobby", "mechanical_room", "kitchen"]
+    # Use whichever zones are present in the data (so the sidebar zone filter works)
+    zones = [c for c in df.columns if c not in ("timestamp", "total", "date")]
 
     # Total consumption per zone
     totals = {zone: df[zone].sum().round(2) for zone in zones}

@@ -17,6 +17,8 @@ def check_alerts(df):
 
     for _, row in df.iterrows():
         for zone, limits in THRESHOLDS.items():
+            if zone not in df.columns:      # zone not selected in the sidebar
+                continue
             value = row[zone]
             if value > limits["max"]:
                 alerts.append({
