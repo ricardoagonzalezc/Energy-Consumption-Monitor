@@ -4,18 +4,25 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 import streamlit as st
 import pandas as pd
+
+import theme
 from analysis.thresholds import check_alerts
 from analysis.metrics import calculate_kpis
 from visuals.charts import line_chart, stacked_bar_chart, heatmap_chart
 
 # ── Page config ───────────────────────────────────────────────
 st.set_page_config(page_title="Energy Consumption Monitor", layout="wide")
-st.title("Energy Consumption Dashboard")
-st.markdown("Multi-zone building energy tracking with anomaly alerts and KPI reporting.")
+theme.apply_theme()
+theme.header(
+    "Energy Consumption Dashboard",
+    "Multi-zone building energy tracking with anomaly alerts and KPI reporting.",
+    eyebrow="Project · Facilities & energy",
+)
 
 # ── Sidebar ───────────────────────────────────────────────────
 st.sidebar.header("1. Data Source")
-data_source = st.sidebar.radio("Choose data source:", ["Use Sample Data", "Upload CSV"])
+data_source = st.sidebar.radio("Choose data source:", ["Use Sample Data", "Upload CSV"],
+                               label_visibility="collapsed")
 
 df = None
 
@@ -68,23 +75,26 @@ if df is not None:
         kpis = calculate_kpis(df[["timestamp"] + selected_zones], cost_per_kwh)
 
         c1, c2, c3, c4, c5 = st.columns(5)
-        c1.metric("Total Consumption", f"{kpis['total_kwh']:,} kWh")
-        c2.metric("Peak Demand",       f"{kpis['peak_kwh']} kWh")
-        c3.metric("Daily Average",     f"{kpis['daily_avg']} kWh")
-        c4.metric("Estimated Cost",    f"€{kpis['total_cost']:,}")
-        c5.metric("Top Consumer",      kpis['worst_zone'].replace("_", " ").title())
+        c1.markdown(theme.tile("Total consumption", f"{kpis['total_kwh']:,}", "kWh"), unsafe_allow_html=True)
+        c2.markdown(theme.tile("Peak demand", f"{kpis['peak_kwh']}", "kWh in one hour"), unsafe_allow_html=True)
+        c3.markdown(theme.tile("Daily average", f"{kpis['daily_avg']}", "kWh per day"), unsafe_allow_html=True)
+        c4.markdown(theme.tile("Estimated cost", f"€{kpis['total_cost']:,.2f}", f"at €{cost_per_kwh:.2f} / kWh"),
+                    unsafe_allow_html=True)
+        c5.markdown(theme.tile("Top consumer", kpis['worst_zone'].replace("_", " ").title(), "highest total kWh"),
+                    unsafe_allow_html=True)
+        st.write("")
 
         # ── Line Chart ────────────────────────────────────────
         st.subheader("Consumption Over Time")
-        st.plotly_chart(line_chart(df, selected_zones), use_container_width=True)
+        st.plotly_chart(line_chart(df, selected_zones), width="stretch")
 
         # ── Stacked Bar Chart ─────────────────────────────────
         st.subheader("Daily Totals by Zone")
-        st.plotly_chart(stacked_bar_chart(df, selected_zones), use_container_width=True)
+        st.plotly_chart(stacked_bar_chart(df, selected_zones), width="stretch")
 
         # ── Heatmap ───────────────────────────────────────────
         st.subheader("Consumption Heatmap")
-        st.plotly_chart(heatmap_chart(df), use_container_width=True)
+        st.plotly_chart(heatmap_chart(df), width="stretch")
 
         # ── Alert Log ─────────────────────────────────────────
         st.subheader("Threshold Alert Log")
@@ -92,7 +102,7 @@ if df is not None:
 
         if len(alerts_df) > 0:
             st.error(f"{len(alerts_df)} alerts triggered across selected zones")
-            st.dataframe(alerts_df, use_container_width=True)
+            st.dataframe(alerts_df, width="stretch")
         else:
             st.success("No threshold violations in selected range")
 
@@ -101,6 +111,3 @@ if df is not None:
 
 else:
     st.info("Select a data source to get started.")
-
-
-    
