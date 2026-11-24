@@ -2,12 +2,16 @@ import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
 
+import theme
+
+# One fixed colour per zone (blueprint palette, always in this order), so a zone keeps
+# its colour in every chart no matter which zones are selected.
 ZONE_COLORS = {
-    "hvac":     "#1f77b4",
-    "lighting": "#ff7f0e",
-    "lobby":    "#2ca02c",
-    "mechanical_room":  "#d62728",
-    "kitchen":  "#9467bd"
+    "hvac":            theme.AMBER,
+    "lighting":        theme.SKY,
+    "lobby":           theme.MINT,
+    "mechanical_room": theme.CORAL,
+    "kitchen":         theme.LAVENDER,
 }
 
 def line_chart(df, zones):
@@ -19,14 +23,9 @@ def line_chart(df, zones):
             y=df[zone],
             mode="lines",
             name=zone.replace("_", " ").title(),
-            line=dict(color=ZONE_COLORS[zone])
+            line=dict(color=ZONE_COLORS[zone], width=1.5)
         ))
-    fig.update_layout(
-        title="Energy Consumption Over Time",
-        xaxis_title="Timestamp",
-        yaxis_title="kWh",
-        legend=dict(x=0.01, y=0.99)
-    )
+    fig.update_layout(xaxis_title="Timestamp", yaxis_title="kWh", height=420)
     return fig
 
 def stacked_bar_chart(df, zones):
@@ -41,15 +40,9 @@ def stacked_bar_chart(df, zones):
             x=daily["date"],
             y=daily[zone],
             name=zone.replace("_", " ").title(),
-            marker_color=ZONE_COLORS[zone]
+            marker=dict(color=ZONE_COLORS[zone], line=dict(color=theme.PANEL, width=1))
         ))
-    fig.update_layout(
-        barmode="stack",
-        title="Daily Energy Consumption by Zone",
-        xaxis_title="Date",
-        yaxis_title="kWh",
-        legend=dict(x=0.01, y=0.99)
-    )
+    fig.update_layout(barmode="stack", xaxis_title="Date", yaxis_title="kWh", height=420)
     return fig
 
 def heatmap_chart(df):
@@ -66,9 +59,12 @@ def heatmap_chart(df):
     fig = px.imshow(
         pivot,
         labels=dict(x="Hour of Day", y="Day of Week", color="Avg kWh"),
-        title="Average Energy Consumption Heatmap",
-        color_continuous_scale="RdYlGn_r",
+        # single-hue ramp (dark panel -> amber): darker = less energy, brighter = more
+        color_continuous_scale=[[0, "#1B3A5C"], [1, theme.AMBER]],
         aspect="auto"
     )
+    fig.update_layout(height=380, coloraxis_colorbar=dict(
+        tickfont=dict(family=theme.FONT_MONO, color=theme.INK_DIM),
+        title=dict(font=dict(family=theme.FONT_MONO, color=theme.INK_DIM)), outlinewidth=0))
     return fig
 
